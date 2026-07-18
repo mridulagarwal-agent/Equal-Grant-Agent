@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SAM_UEI_Format</fullName>
+    <active>true</active>
+    <description>Ensures SAM UEI is 12 uppercase alphanumeric characters when provided.</description>
+    <errorConditionFormula>AND(
+    NOT(ISBLANK(SAM_UEI__c)),
+    NOT(REGEX(SAM_UEI__c, "^[A-Z0-9]{12}$"))
+)</errorConditionFormula>
+    <errorDisplayField>SAM_UEI__c</errorDisplayField>
+    <errorMessage>SAM UEI must be exactly 12 uppercase alphanumeric characters.</errorMessage>
+</ValidationRule>

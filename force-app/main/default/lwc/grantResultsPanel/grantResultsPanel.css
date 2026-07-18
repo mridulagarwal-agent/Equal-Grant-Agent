@@ -1,0 +1,30 @@
+:host {
+    display: block;
+}
+
+.es-card {
+    height: 100%;
+}
+
+.es-summary > summary {
+    cursor: pointer;
+    list-style: none;
+    outline-offset: 4px;
+}
+
+.es-summary > summary::-webkit-details-marker {
+    display: none;
+}
+
+.es-summary > summary:focus-visible {
+    outline: 3px solid var(--slds-g-color-brand-base-50, #0176d3);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :host * {
+        animation: none !important;
+        transition: none !important;
+    }
+}

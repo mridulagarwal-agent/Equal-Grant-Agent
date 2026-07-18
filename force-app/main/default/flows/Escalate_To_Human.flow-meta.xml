@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Flow xmlns="http://soap.sforce.com/2006/04/metadata">
+    <apiVersion>62.0</apiVersion>
+    <description>HITL handoff: creates a Case tagged for the escalation queue, links to the application if provided.</description>
+    <environments>Default</environments>
+    <interviewLabel>Escalate To Human {!$Flow.CurrentDateTime}</interviewLabel>
+    <label>Escalate To Human</label>
+    <processMetadataValues>
+        <name>BuilderType</name>
+        <value>
+            <stringValue>LightningFlowBuilder</stringValue>
+        </value>
+    </processMetadataValues>
+    <processType>AutoLaunchedFlow</processType>
+    <runInMode>SystemModeWithSharing</runInMode>
+    <start>
+        <locationX>176</locationX>
+        <locationY>0</locationY>
+        <connector>
+            <targetReference>Create_Case</targetReference>
+        </connector>
+    </start>
+    <status>Active</status>
+
+    <!-- Inputs -->
+    <variables>
+        <name>inputAccountId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>inputReason</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>inputTranscriptSummary</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+    <variables>
+        <name>inputApplicationId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>true</isInput>
+        <isOutput>false</isOutput>
+    </variables>
+
+    <!-- Outputs -->
+    <variables>
+        <name>outputCaseId</name>
+        <dataType>String</dataType>
+        <isCollection>false</isCollection>
+        <isInput>false</isInput>
+        <isOutput>true</isOutput>
+    </variables>
+
+    <recordCreates>
+        <name>Create_Case</name>
+        <label>Create HITL Case</label>
+        <locationX>176</locationX>
+        <locationY>120</locationY>
+        <connector>
+            <targetReference>Has_Application</targetReference>
+        </connector>
+        <inputAssignments>
+            <field>AccountId</field>
+            <value>
+                <elementReference>inputAccountId</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Origin</field>
+            <value>
+                <stringValue>Agentforce</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Priority</field>
+            <value>
+                <stringValue>High</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Status</field>
+            <value>
+                <stringValue>New</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Subject</field>
+            <value>
+                <stringValue>EqualStart escalation</stringValue>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Description</field>
+            <value>
+                <elementReference>inputTranscriptSummary</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Reason</field>
+            <value>
+                <elementReference>inputReason</elementReference>
+            </value>
+        </inputAssignments>
+        <object>Case</object>
+        <storeOutputAutomatically>true</storeOutputAutomatically>
+    </recordCreates>
+
+    <decisions>
+        <name>Has_Application</name>
+        <label>Has Application?</label>
+        <locationX>176</locationX>
+        <locationY>240</locationY>
+        <defaultConnector>
+            <targetReference>Set_Output</targetReference>
+        </defaultConnector>
+        <defaultConnectorLabel>No</defaultConnectorLabel>
+        <rules>
+            <name>Yes</name>
+            <conditionLogic>and</conditionLogic>
+            <conditions>
+                <leftValueReference>inputApplicationId</leftValueReference>
+                <operator>IsNull</operator>
+                <rightValue>
+                    <booleanValue>false</booleanValue>
+                </rightValue>
+            </conditions>
+            <connector>
+                <targetReference>Link_Application</targetReference>
+            </connector>
+            <label>Yes</label>
+        </rules>
+    </decisions>
+
+    <recordUpdates>
+        <name>Link_Application</name>
+        <label>Link Case to Application</label>
+        <locationX>50</locationX>
+        <locationY>360</locationY>
+        <connector>
+            <targetReference>Set_Output</targetReference>
+        </connector>
+        <filterLogic>and</filterLogic>
+        <filters>
+            <field>Id</field>
+            <operator>EqualTo</operator>
+            <value>
+                <elementReference>inputApplicationId</elementReference>
+            </value>
+        </filters>
+        <inputAssignments>
+            <field>Escalated_Case__c</field>
+            <value>
+                <elementReference>Create_Case</elementReference>
+            </value>
+        </inputAssignments>
+        <inputAssignments>
+            <field>Escalation_Required__c</field>
+            <value>
+                <booleanValue>true</booleanValue>
+            </value>
+        </inputAssignments>
+        <object>Grant_Application__c</object>
+    </recordUpdates>
+
+    <assignments>
+        <name>Set_Output</name>
+        <label>Set Output Case Id</label>
+        <locationX>176</locationX>
+        <locationY>480</locationY>
+        <assignmentItems>
+            <assignToReference>outputCaseId</assignToReference>
+            <operator>Assign</operator>
+            <value>
+                <elementReference>Create_Case</elementReference>
+            </value>
+        </assignmentItems>
+    </assignments>
+</Flow>

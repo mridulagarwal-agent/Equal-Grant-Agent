@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Business_Stage__c</fullName>
+    <externalId>false</externalId>
+    <label>Business Stage</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>false</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Idea</fullName>
+                <default>false</default>
+                <label>Idea</label>
+            </value>
+            <value>
+                <fullName>Startup</fullName>
+                <default>false</default>
+                <label>Startup</label>
+            </value>
+            <value>
+                <fullName>Growth</fullName>
+                <default>false</default>
+                <label>Growth</label>
+            </value>
+            <value>
+                <fullName>Established</fullName>
+                <default>false</default>
+                <label>Established</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

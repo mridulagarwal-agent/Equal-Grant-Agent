@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Declarative mapping between NAICS prefixes and Grants.gov funding category codes. Consumed by GrantsGovService.mapNaicsToCategory.</description>
+    <label>Grant Category Mapping</label>
+    <pluralLabel>Grant Category Mappings</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

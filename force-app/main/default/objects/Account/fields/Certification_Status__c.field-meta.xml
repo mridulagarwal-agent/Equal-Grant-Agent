@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Certification_Status__c</fullName>
+    <description>Multi-select list of active SBA/state certifications.</description>
+    <externalId>false</externalId>
+    <label>Certification Status</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>MultiselectPicklist</type>
+    <visibleLines>4</visibleLines>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>8a</fullName>
+                <default>false</default>
+                <label>8(a)</label>
+            </value>
+            <value>
+                <fullName>WOSB</fullName>
+                <default>false</default>
+                <label>WOSB</label>
+            </value>
+            <value>
+                <fullName>EDWOSB</fullName>
+                <default>false</default>
+                <label>EDWOSB</label>
+            </value>
+            <value>
+                <fullName>VOSB</fullName>
+                <default>false</default>
+                <label>VOSB</label>
+            </value>
+            <value>
+                <fullName>SDVOSB</fullName>
+                <default>false</default>
+                <label>SDVOSB</label>
+            </value>
+            <value>
+                <fullName>HUBZone</fullName>
+                <default>false</default>
+                <label>HUBZone</label>
+            </value>
+            <value>
+                <fullName>MBE</fullName>
+                <default>false</default>
+                <label>MBE</label>
+            </value>
+            <value>
+                <fullName>None</fullName>
+                <default>true</default>
+                <label>None</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

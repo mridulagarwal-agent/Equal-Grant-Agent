@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>NAICS_Code__c</fullName>
+    <description>6-digit NAICS code used to derive Grants.gov funding category via Grant_Category_Mapping__mdt.</description>
+    <externalId>false</externalId>
+    <label>NAICS Code</label>
+    <length>6</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Revenue_Band__c</fullName>
+    <externalId>false</externalId>
+    <label>Revenue Band</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>false</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Under_100k</fullName>
+                <default>false</default>
+                <label>&lt; $100k</label>
+            </value>
+            <value>
+                <fullName>100k_1M</fullName>
+                <default>false</default>
+                <label>$100k - $1M</label>
+            </value>
+            <value>
+                <fullName>1M_10M</fullName>
+                <default>false</default>
+                <label>$1M - $10M</label>
+            </value>
+            <value>
+                <fullName>Over_10M</fullName>
+                <default>false</default>
+                <label>&gt; $10M</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

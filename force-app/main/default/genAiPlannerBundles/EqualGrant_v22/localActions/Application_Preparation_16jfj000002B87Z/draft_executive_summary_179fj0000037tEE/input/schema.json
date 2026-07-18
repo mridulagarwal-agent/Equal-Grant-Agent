@@ -1,0 +1,51 @@
+{
+  "required" : [ "Input:Grant", "Input:Business", "Input:Application" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "Input:Application" : {
+      "title" : "Application",
+      "description" : "Grant Application object",
+      "lightning:type" : "lightning__recordInfoType",
+      "lightning:sObjectInfo" : {
+        "apiName" : "Grant_Application__c"
+      },
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "Input:Grant" : {
+      "title" : "Grant",
+      "description" : "Grant Opportunity object",
+      "lightning:type" : "lightning__recordInfoType",
+      "lightning:sObjectInfo" : {
+        "apiName" : "Grant_Opportunity__c"
+      },
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "Input:Business" : {
+      "title" : "Business",
+      "description" : "Account object",
+      "lightning:type" : "lightning__recordInfoType",
+      "lightning:sObjectInfo" : {
+        "apiName" : "Account"
+      },
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "outputLanguage" : {
+      "title" : "Output language",
+      "description" : "Optional response language code.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "isPreviewOnly" : {
+      "title" : "Preview Only",
+      "description" : "Resolves the prompt template without generating an LLM response.",
+      "lightning:type" : "lightning__booleanType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

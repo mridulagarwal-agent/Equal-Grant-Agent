@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SharingRules xmlns="http://soap.sforce.com/2006/04/metadata">
+    <sharingGuestRules>
+        <fullName>Guest_Read_Cached_Grants</fullName>
+        <accessLevel>Read</accessLevel>
+        <description>Grants the Equal Grant site guest user read access to cached grant opportunities so the grantResultsPanel LWC can render them.</description>
+        <label>Guest Read Cached Grants</label>
+        <sharedTo>
+            <guestUser>Equal_Grant</guestUser>
+        </sharedTo>
+        <criteriaItems>
+            <field>Last_Refreshed__c</field>
+            <operation>notEqual</operation>
+            <value></value>
+        </criteriaItems>
+    </sharingGuestRules>
+</SharingRules>

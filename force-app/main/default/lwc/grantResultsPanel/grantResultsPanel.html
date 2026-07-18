@@ -1,0 +1,95 @@
+<template>
+    <section class="slds-card slds-p-around_medium" role="region" aria-labelledby="grants-heading">
+        <header class="slds-grid slds-grid_vertical-align-center slds-m-bottom_small">
+            <h2 id="grants-heading" class="slds-text-heading_medium slds-grow">
+                Your matched federal grants
+            </h2>
+            <lightning-button
+                variant="neutral"
+                label="Refresh matches"
+                icon-name="utility:refresh"
+                onclick={handleRefresh}>
+            </lightning-button>
+        </header>
+
+        <div class="slds-assistive-text" aria-live="polite" aria-atomic="true">
+            {statusMessage}
+        </div>
+
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Loading grant matches" size="medium"></lightning-spinner>
+        </template>
+
+        <template lwc:if={error}>
+            <div class="slds-notify slds-notify_alert slds-alert_error slds-theme_alert-texture" role="alert">
+                <span class="slds-assistive-text">Error:</span>
+                <p>{error}</p>
+            </div>
+        </template>
+
+        <template lwc:if={isEmpty}>
+            <div class="slds-illustration slds-illustration_small slds-p-vertical_large slds-text-align_center">
+                <p class="slds-text-body_regular slds-text-color_weak">
+                    No matches yet. Complete your business profile to see live federal grant matches.
+                </p>
+            </div>
+        </template>
+
+        <template lwc:if={hasGrants}>
+            <ul id="grant-grid" class="slds-grid slds-wrap slds-gutters" role="list">
+                <template for:each={grants} for:item="g">
+                    <li key={g.opportunityNumber}
+                        class="slds-col slds-size_1-of-1 slds-large-size_1-of-2 slds-m-bottom_medium"
+                        role="listitem">
+                        <article class="slds-box slds-box_x-small slds-theme_default es-card"
+                                 aria-labelledby={g.domId}>
+                            <header class="slds-grid slds-grid_align-spread slds-m-bottom_x-small">
+                                <span class="slds-badge">{g.agency}</span>
+                                <span class="slds-text-body_small slds-text-color_weak">
+                                    {g.daysToCloseLabel}
+                                </span>
+                            </header>
+                            <h3 id={g.domId} class="slds-text-heading_small slds-m-bottom_xx-small">
+                                {g.title}
+                            </h3>
+                            <p id={g.hintId} class="slds-text-body_small slds-text-color_weak">
+                                Opportunity {g.opportunityNumber}
+                            </p>
+                            <dl class="slds-grid slds-grid_pull-padded-x-small slds-m-top_x-small">
+                                <div class="slds-col slds-p-horizontal_x-small">
+                                    <dt class="slds-text-title_caps">Award ceiling</dt>
+                                    <dd class="slds-text-body_regular">
+                                        <strong>{g.awardCeilingFormatted}</strong>
+                                    </dd>
+                                </div>
+                                <div class="slds-col slds-p-horizontal_x-small">
+                                    <dt class="slds-text-title_caps">Closes</dt>
+                                    <dd class="slds-text-body_regular">
+                                        <strong>{g.closeDateFormatted}</strong>
+                                    </dd>
+                                </div>
+                            </dl>
+                            <details class="slds-m-top_small es-summary">
+                                <summary class="slds-text-body_regular slds-text-color_success">
+                                    Why you match
+                                </summary>
+                                <p class="slds-m-top_xx-small slds-text-body_small">
+                                    {g.matchRationale}
+                                </p>
+                            </details>
+                            <div class="slds-m-top_small">
+                                <lightning-button
+                                    variant="brand"
+                                    label="Apply for this grant"
+                                    data-grant-id={g.id}
+                                    aria-describedby={g.hintId}
+                                    onclick={handleApply}>
+                                </lightning-button>
+                            </div>
+                        </article>
+                    </li>
+                </template>
+            </ul>
+        </template>
+    </section>
+</template>

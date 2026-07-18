@@ -1,0 +1,35 @@
+{
+  "required" : [ ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "inputAccountId" : {
+      "title" : "Input Account Id",
+      "description" : "Input Account Id",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputApplicationId" : {
+      "title" : "Input Application Id",
+      "description" : "Input Application Id",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputReason" : {
+      "title" : "Input Reason",
+      "description" : "Input Reason",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputTranscriptSummary" : {
+      "title" : "Input Transcript Summary",
+      "description" : "Input Transcript Summary",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

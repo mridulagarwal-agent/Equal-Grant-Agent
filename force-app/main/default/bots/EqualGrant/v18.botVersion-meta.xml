@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<BotVersion xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>v18</fullName>
+    <articleAnswersGPTEnabled>false</articleAnswersGPTEnabled>
+    <botDialogs>
+        <botSteps>
+            <botMessages>
+                <message>Welcome! I help small business owners find and apply for federal grants -
+free, and no account needed. What funding question can I answer for you?</message>
+                <messageIdentifier>8e76a24f-7d71-4b21-9690-5f4a18fe2172</messageIdentifier>
+            </botMessages>
+            <stepIdentifier>9c0eab96-35e8-48d1-930d-6ead95ede9dd</stepIdentifier>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <stepIdentifier>5297c5ed-5821-405d-880b-c97e6ca41fc5</stepIdentifier>
+            <type>Wait</type>
+        </botSteps>
+        <developerName>Welcome</developerName>
+        <isPlaceholderDialog>false</isPlaceholderDialog>
+        <label>Welcome</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botSteps>
+            <botMessages>
+                <message>Sorry, something went wrong on my end. Could you say that again a different way?</message>
+                <messageIdentifier>0fd64506-cd4f-49b4-b814-67e025497d39</messageIdentifier>
+            </botMessages>
+            <stepIdentifier>915ca8c5-fb4c-4e13-bcaa-8510c5d4106e</stepIdentifier>
+            <type>Message</type>
+        </botSteps>
+        <botSteps>
+            <stepIdentifier>4d169383-c5c6-47ca-bf1e-fda593efc2b2</stepIdentifier>
+            <type>Wait</type>
+        </botSteps>
+        <developerName>Rich_Content_Error_Handling</developerName>
+        <isPlaceholderDialog>false</isPlaceholderDialog>
+        <label>Error Handler</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <botDialogs>
+        <botSteps>
+            <conversationSystemMessage>
+                <type>Transfer</type>
+            </conversationSystemMessage>
+            <stepIdentifier>567d2e62-e5c0-4597-83e6-c9f82dd7c0df</stepIdentifier>
+            <type>SystemMessage</type>
+        </botSteps>
+        <developerName>Transfer_To_Agent</developerName>
+        <isPlaceholderDialog>false</isPlaceholderDialog>
+        <label>Transfer To Agent</label>
+        <showInFooterMenu>false</showInFooterMenu>
+    </botDialogs>
+    <citationsEnabled>false</citationsEnabled>
+    <conversationDefinitionPlanners>
+        <genAiPlannerName>EqualGrant_v18</genAiPlannerName>
+    </conversationDefinitionPlanners>
+    <conversationSystemDialogs>
+        <dialog>Rich_Content_Error_Handling</dialog>
+        <type>ErrorHandling</type>
+    </conversationSystemDialogs>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>True once the grant search has run this session.</description>
+        <developerName>search_complete</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Search Complete</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Q1: the business legal name.</description>
+        <developerName>intake_biz_name</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Intake Biz Name</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>True once the business profile has been saved.</description>
+        <developerName>profile_complete</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Profile Complete</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Opportunity number of the grant the user chose.</description>
+        <developerName>selected_opportunity_number</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Selected Opportunity Number</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The AI-drafted executive summary text.</description>
+        <developerName>executive_summary_draft</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Executive Summary Draft</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>False if the last search returned cached or mock data.</description>
+        <developerName>live_data</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Live Data</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Two-letter US state code, extracted from the conversation.</description>
+        <developerName>intake_state</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Intake State</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The agent instructions</description>
+        <developerName>AgentScriptInternal_agent_instructions</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Agent Instructions</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>True once the executive-summary draft action has been attempted, so it is not offered or run again.</description>
+        <developerName>draft_attempted</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Draft Attempted</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Q5: SAM.gov / UEI status.</description>
+        <developerName>intake_sam_status</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Intake Sam Status</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>Derived from Q4: majority veteran-owned.</description>
+        <developerName>intake_veteran_owned</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Intake Veteran Owned</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Q4: ownership answer (text).</description>
+        <developerName>intake_ownership</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Intake Ownership</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>Derived from Q4: majority woman-owned.</description>
+        <developerName>intake_woman_owned</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Intake Woman Owned</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>Runtime condition evaluation for if statements</description>
+        <developerName>AgentScriptInternal_condition_1</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Runtime Condition 1</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Q3: annual revenue.</description>
+        <developerName>intake_revenue</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Intake Revenue</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>True once the application summary card has been rendered, so it is not shown again.</description>
+        <developerName>summary_card_shown</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Summary Card Shown</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>The next topic to be visited</description>
+        <developerName>AgentScriptInternal_next_topic</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Next Topic</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Q2: number of employees.</description>
+        <developerName>intake_employees</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Intake Employees</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Account Id for the business. Empty until the profile is saved.</description>
+        <developerName>account_id</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Account Id</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Formatted grant list returned by the search action.</description>
+        <developerName>search_summary</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Search Summary</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Record Id of the chosen grant, if known.</description>
+        <developerName>selected_grant_id</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Selected Grant Id</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Grant Application Id. Empty until the application is created.</description>
+        <developerName>application_id</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Application Id</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Boolean</dataType>
+        <description>Derived from Q4: majority minority-owned.</description>
+        <developerName>intake_minority_owned</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Intake Minority Owned</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <conversationVariables>
+        <dataType>Text</dataType>
+        <description>Q6: what the funding is for.</description>
+        <developerName>intake_use_of_funds</developerName>
+        <includeInPrompt>false</includeInPrompt>
+        <label>Intake Use Of Funds</label>
+        <visibility>Internal</visibility>
+    </conversationVariables>
+    <copilotPrimaryLanguage>en_US</copilotPrimaryLanguage>
+    <defaultStdObjForContactIdFltrEnabled>false</defaultStdObjForContactIdFltrEnabled>
+    <entryDialog>Welcome</entryDialog>
+    <intentDisambiguationEnabled>false</intentDisambiguationEnabled>
+    <intentV3Enabled>false</intentV3Enabled>
+    <isScriptCompatibleAgent>true</isScriptCompatibleAgent>
+    <knowledgeActionEnabled>false</knowledgeActionEnabled>
+    <knowledgeFallbackEnabled>false</knowledgeFallbackEnabled>
+    <role>Help small business owners find federal grants, create accounts, and prepare applications.</role>
+    <smallTalkEnabled>false</smallTalkEnabled>
+    <staticPromptsEnabled>false</staticPromptsEnabled>
+    <stopRecPrompts>false</stopRecPrompts>
+    <stopWelcomePrompts>false</stopWelcomePrompts>
+    <surfacesEnabled>false</surfacesEnabled>
+    <toneType>Casual</toneType>
+</BotVersion>

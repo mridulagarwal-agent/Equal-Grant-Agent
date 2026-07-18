@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Create Application And Checklist</masterLabel>
+    <description>Creates a Grant Application with a baseline checklist for the selected opportunity.</description>
+    <invocationTarget>Create_Application_And_Checklist</invocationTarget>
+    <invocationTargetType>flow</invocationTargetType>
+</GenAiFunction>

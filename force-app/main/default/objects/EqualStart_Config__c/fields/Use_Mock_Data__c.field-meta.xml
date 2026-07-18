@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Use_Mock_Data__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Master mock-mode toggle. When true, GrantsGovService returns a hardcoded sample payload instead of calling the live Grants.gov API.</description>
+    <externalId>false</externalId>
+    <inlineHelpText>Turn on to bypass live Grants.gov calls and use canned sample data (demo/testing).</inlineHelpText>
+    <label>Use Mock Data</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

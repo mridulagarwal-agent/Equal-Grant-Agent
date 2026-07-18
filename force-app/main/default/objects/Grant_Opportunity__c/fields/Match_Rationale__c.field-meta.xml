@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Match_Rationale__c</fullName>
+    <description>Deterministic explanation for why this grant matched the business profile. Rendered on the LWC "Why you match" expander.</description>
+    <externalId>false</externalId>
+    <label>Match Rationale</label>
+    <length>2000</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>3</visibleLines>
+</CustomField>

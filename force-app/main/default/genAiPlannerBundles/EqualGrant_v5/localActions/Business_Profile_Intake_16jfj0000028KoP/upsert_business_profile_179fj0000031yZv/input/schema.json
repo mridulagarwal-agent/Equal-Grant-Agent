@@ -1,0 +1,84 @@
+{
+  "required" : [ ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "inputAccountId" : {
+      "title" : "Input Account Id",
+      "description" : "Input Account Id",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputBusinessName" : {
+      "title" : "Input Business Name",
+      "description" : "Input Business Name",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputBusinessStage" : {
+      "title" : "Input Business Stage",
+      "description" : "Input Business Stage",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputKeywords" : {
+      "title" : "Input Keywords",
+      "description" : "Input Keywords",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputMinorityOwned" : {
+      "title" : "Input Minority Owned",
+      "description" : "Input Minority Owned",
+      "lightning:type" : "lightning__booleanType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputNaics" : {
+      "title" : "Input Naics",
+      "description" : "Input Naics",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputRevenueBand" : {
+      "title" : "Input Revenue Band",
+      "description" : "Input Revenue Band",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputSamUei" : {
+      "title" : "Input Sam Uei",
+      "description" : "Input Sam Uei",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputState" : {
+      "title" : "Input State",
+      "description" : "Input State",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputVeteranOwned" : {
+      "title" : "Input Veteran Owned",
+      "description" : "Input Veteran Owned",
+      "lightning:type" : "lightning__booleanType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputWomanOwned" : {
+      "title" : "Input Woman Owned",
+      "description" : "Input Woman Owned",
+      "lightning:type" : "lightning__booleanType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Matched_Account__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Last business account that this opportunity was surfaced for. Not a hard link - the same opportunity may match many accounts.</description>
+    <externalId>false</externalId>
+    <label>Matched Account</label>
+    <referenceTo>Account</referenceTo>
+    <relationshipLabel>Matched Grants</relationshipLabel>
+    <relationshipName>Matched_Grants</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

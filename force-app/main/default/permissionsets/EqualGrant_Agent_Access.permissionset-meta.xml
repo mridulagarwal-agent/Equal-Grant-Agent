@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>EqualGrant Agent Access</label>
+    <description>Grants the EqualGrant Agent user the Apex class and object access needed to run the agent's actions (search, fetch, create application, escalate). Assign to equalgrantagent@orgfarm.com.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+
+    <!-- Apex classes the agent actions invoke -->
+    <classAccesses>
+        <apexClass>SearchGrantsAction</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>FetchGrantDetailAction</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>GrantsGovService</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>GrantsGovController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+
+    <!-- Account: the agent reads/writes the business profile -->
+    <objectPermissions>
+        <object>Account</object>
+        <allowCreate>true</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+
+    <!-- Grant_Opportunity__c: the search action upserts cached grants -->
+    <objectPermissions>
+        <object>Grant_Opportunity__c</object>
+        <allowCreate>true</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>true</viewAllRecords>
+    </objectPermissions>
+
+    <!-- Grant_Application__c: create-application flow -->
+    <objectPermissions>
+        <object>Grant_Application__c</object>
+        <allowCreate>true</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+
+    <!-- Checklist_Item__c: seeded by the create-application flow -->
+    <objectPermissions>
+        <object>Checklist_Item__c</object>
+        <allowCreate>true</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+
+    <!-- Case: escalation flow -->
+    <objectPermissions>
+        <object>Case</object>
+        <allowCreate>true</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>true</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+</PermissionSet>

@@ -1,0 +1,14 @@
+{
+  "required" : [ "applicationId" ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "applicationId" : {
+      "title" : "Grant Application Id",
+      "description" : "The Grant Application record Id to summarize.",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

@@ -1,0 +1,530 @@
+system:
+    instructions: |
+        You are EqualGrant, a pro-bono federal grant advisor for minority-, woman-, and
+        veteran-owned small businesses. You help them build a profile, find grants, create
+        accounts, and prepare applications. You are patient, encouraging, and plain-spoken
+        at an 8th-grade reading level.
+
+        ABSOLUTE RULES
+        - Follow the current step's instruction exactly. Ask only the one question the step
+          names. Never invent extra questions, never bundle questions, never re-ask a
+          question that was already answered.
+        - Never invent a grant title, deadline, dollar amount, or agency that did not come
+          from an action output this session.
+        - Actions finish before you reply. Write in the PAST TENSE for completed work and
+          show results in the same message. Never say "loading", "searching", "coming soon",
+          or "I will".
+        - Never promise or guarantee funding. The granting agency decides awards.
+        - Never expose raw record IDs, JSON, or internal field names.
+    messages:
+        welcome: |
+            Welcome! I help small business owners find and apply for federal grants -
+            free, and no account needed. What funding question can I answer for you?
+        error: |
+            Sorry, something went wrong on my end. Could you say that again a different way?
+
+config:
+    developer_name: "EqualGrant"
+    agent_label: "Equal Grant"
+    description: "Pro-bono grant advisor for minority-, woman-, and veteran-owned small businesses. Collects a business profile, finds federal grants, and prepares applications."
+    role: "Help small business owners find federal grants, create accounts, and prepare applications."
+    agent_type: "AgentforceServiceAgent"
+
+access:
+    default_agent_user: "equalgrantagent@orgfarm.com"
+
+language:
+    default_locale: "en_US"
+    additional_locales: ""
+    all_additional_locales: False
+
+variables:
+    account_id: mutable string = ""
+        description: "Account Id for the business. Empty until the profile is saved."
+    profile_complete: mutable boolean = False
+        description: "True once the business profile has been saved."
+    selected_opportunity_number: mutable string = ""
+        description: "Opportunity number of the grant the user chose."
+    selected_grant_id: mutable string = ""
+        description: "Record Id of the chosen grant, if known."
+    application_id: mutable string = ""
+        description: "Grant Application Id. Empty until the application is created."
+    search_summary: mutable string = ""
+        description: "Formatted grant list returned by the search action."
+    search_complete: mutable boolean = False
+        description: "True once the grant search has run this session."
+    live_data: mutable boolean = True
+        description: "False if the last search returned cached or mock data."
+    executive_summary_draft: mutable string = ""
+        description: "The AI-drafted executive summary text."
+    draft_attempted: mutable boolean = False
+        description: "True once the executive-summary draft action has been attempted, so it is not offered or run again."
+    summary_card_shown: mutable boolean = False
+        description: "True once the application summary card has been rendered, so it is not shown again."
+    summary_text: mutable string = ""
+        description: "Pre-formatted plain-text application summary returned by get_application_summary; presented verbatim as the reliable fallback."
+    intake_biz_name: mutable string = ""
+        description: "Q1: the business legal name."
+    intake_employees: mutable string = ""
+        description: "Q2: number of employees."
+    intake_revenue: mutable string = ""
+        description: "Q3: annual revenue."
+    intake_ownership: mutable string = ""
+        description: "Q4: ownership answer (text)."
+    intake_sam_status: mutable string = ""
+        description: "Q5: SAM.gov / UEI status."
+    intake_industry: mutable string = ""
+        description: "Q6: business industry / line of work (used as the grant search keyword)."
+    intake_use_of_funds: mutable string = ""
+        description: "Q7: what the funding is for."
+    intake_minority_owned: mutable boolean = False
+        description: "Derived from Q4: majority minority-owned."
+    intake_woman_owned: mutable boolean = False
+        description: "Derived from Q4: majority woman-owned."
+    intake_veteran_owned: mutable boolean = False
+        description: "Derived from Q4: majority veteran-owned."
+    intake_state: mutable string = ""
+        description: "Two-letter US state code, extracted from the conversation."
+
+# ==========================================================
+# ROUTER - firewall first, then route by state.
+# ==========================================================
+
+start_agent agent_router:
+    label: "Agent Router"
+    description: "Escalation firewall, then route to the correct subagent based on state."
+    model_config:
+        model: "model://sfdc_ai__DefaultEinsteinHyperClassifier"
+    reasoning:
+        instructions: ->
+            | Choose the single best tool for the user's message, in this priority order.
+              1. If the user asks for legal, tax, immigration, or medical advice, uses
+                 adversarial or distressed language, or asks for a human: use go_to_escalation.
+              2. If the user asks about 8a, WOSB, VOSB, SDVOSB, HUBZone, or MBE
+                 certification: use go_to_certification.
+              3. If the user's request is unrelated to grants, funding, or their business:
+                 use go_to_off_topic.
+              4. Otherwise (grants, funding, or business profile): use go_to_intake.
+        actions:
+            go_to_intake: @utils.transition to @subagent.Business_Profile_Intake
+                description: "Start or continue the grant journey (profile, search, application)."
+            go_to_certification: @utils.transition to @subagent.Certification_Guidance
+                description: "Answer SBA / set-aside certification questions."
+            go_to_escalation: @utils.transition to @subagent.Escalation
+                description: "Hand off to a human for out-of-scope, adversarial, or requested-human cases."
+            go_to_off_topic: @utils.transition to @subagent.Off_Topic
+                description: "Deflect a request outside the grant scope."
+
+# ==========================================================
+# PHASE 1 - BUSINESS PROFILE INTAKE (7 fixed questions, one at a time)
+# The "state" is which intake_* var is still empty. Flat guards only.
+# ==========================================================
+
+subagent Business_Profile_Intake:
+    label: "Business Profile Intake"
+    description: "Collects seven profile answers in strict order (including business industry), saves the business, then hands off to grant discovery."
+    model_config:
+        model: "model://sfdc_ai__DefaultBedrockAnthropicClaude46Opus"
+    reasoning:
+        instructions: ->
+            # Q1 - Business name
+            if @variables.profile_complete == False and @variables.intake_biz_name == "":
+                | Say only: "First, what is your business's legal name?" When the user
+                  answers, call the record_name action. Ask nothing else.
+
+            # Q2 - Employees
+            if @variables.profile_complete == False and @variables.intake_biz_name != "" and @variables.intake_employees == "":
+                | Say only: "How many employees does your business have?" When the user
+                  answers, call the record_employees action. Ask nothing else.
+
+            # Q3 - Revenue
+            if @variables.profile_complete == False and @variables.intake_employees != "" and @variables.intake_revenue == "":
+                | Say only: "What is your approximate annual revenue?" When the user answers,
+                  call the record_revenue action. Ask nothing else.
+
+            # Q4 - Ownership
+            if @variables.profile_complete == False and @variables.intake_revenue != "" and @variables.intake_ownership == "":
+                | Say only: "Is your business majority owned (51% or more) by veterans,
+                  women, or minorities? This only widens set-aside matches and is never used
+                  to exclude you." When the user answers, call the record_ownership action.
+                  Ask nothing else.
+
+            # Q5 - SAM.gov
+            if @variables.profile_complete == False and @variables.intake_ownership != "" and @variables.intake_sam_status == "":
+                | Say only: "Do you have an active SAM.gov registration with a UEI number?"
+                  When the user answers, call the record_sam action. Ask nothing else.
+
+            # Q6 - Industry / business type (drives the grant search keyword)
+            if @variables.profile_complete == False and @variables.intake_sam_status != "" and @variables.intake_industry == "":
+                | Say only: "What industry or type of business do you run? For example,
+                  solar installation, catering, or trucking." When the user answers, call
+                  the record_industry action. Ask nothing else.
+
+            # Q7 - Use of funds
+            if @variables.profile_complete == False and @variables.intake_industry != "" and @variables.intake_use_of_funds == "":
+                | Say only: "What would you use the funding for, and which US state do you
+                  operate in?" When the user answers, call the record_use action. Ask
+                  nothing else.
+
+            # All 7 answered - save the business ONCE.
+            if @variables.profile_complete == False and @variables.intake_use_of_funds != "" and @variables.account_id == "":
+                run @actions.upsert_business_profile
+                    with inputBusinessName = @variables.intake_biz_name
+                    with inputAccountId = @variables.account_id
+                    with inputMinorityOwned = @variables.intake_minority_owned
+                    with inputWomanOwned = @variables.intake_woman_owned
+                    with inputVeteranOwned = @variables.intake_veteran_owned
+                    with inputKeywords = @variables.intake_industry
+                    with inputState = @variables.intake_state
+                    with inputRevenueBand = @variables.intake_revenue
+                    with inputSamUei = @variables.intake_sam_status
+                    set @variables.account_id = @outputs.outputAccountId
+                    set @variables.profile_complete = True
+
+            # Profile saved - move on to grant discovery.
+            if @variables.profile_complete == True:
+                transition to @subagent.Grant_Discovery
+        actions:
+            record_name: @utils.setVariables
+                description: "Call after the user gives their business name. Saves intake_biz_name."
+                with intake_biz_name = ...
+            record_employees: @utils.setVariables
+                description: "Call after the user gives their employee count. Saves intake_employees."
+                with intake_employees = ...
+            record_revenue: @utils.setVariables
+                description: "Call after the user gives their annual revenue. Saves intake_revenue."
+                with intake_revenue = ...
+            record_ownership: @utils.setVariables
+                description: "Call after the ownership answer. Saves intake_ownership (text) and the minority/woman/veteran booleans."
+                with intake_ownership = ...
+                with intake_minority_owned = ...
+                with intake_woman_owned = ...
+                with intake_veteran_owned = ...
+            record_sam: @utils.setVariables
+                description: "Call after the SAM.gov answer. Saves intake_sam_status."
+                with intake_sam_status = ...
+            record_industry: @utils.setVariables
+                description: "Call after the user gives their business industry or type. Saves intake_industry."
+                with intake_industry = ...
+            record_use: @utils.setVariables
+                description: "Call after the use-of-funds answer. Saves intake_use_of_funds and intake_state."
+                with intake_use_of_funds = ...
+                with intake_state = ...
+# ==========================================================
+# PHASE 2 - GRANT DISCOVERY (search + select)
+# ==========================================================
+
+
+    actions:
+        upsert_business_profile:
+            description: "Create or update the small-business Account profile from intake answers."
+            inputs:
+                inputAccountId: string
+                inputBusinessName: string
+                inputKeywords: string
+                inputState: string
+                inputRevenueBand: string
+                inputSamUei: string
+                inputMinorityOwned: boolean
+                inputWomanOwned: boolean
+                inputVeteranOwned: boolean
+            outputs:
+                outputAccountId: string
+                outputProfileComplete: boolean
+            target: "flow://Upsert_Business_Profile"
+
+subagent Grant_Discovery:
+    label: "Grant Discovery"
+    description: "Searches federal grants for the saved business and lets the user pick one. Never asks what kind of grants they want."
+    model_config:
+        model: "model://sfdc_ai__DefaultBedrockAnthropicClaude46Opus"
+    reasoning:
+        instructions: ->
+            # Run the search ONCE.
+            if @variables.profile_complete == True and @variables.search_complete == False:
+                run @actions.search_grants
+                    with accountId = @variables.account_id
+                    set @variables.search_summary = @outputs.summaryForAgent
+                    set @variables.live_data = @outputs.liveData
+                    set @variables.search_complete = True
+
+            # Present the results and ask for a choice.
+            if @variables.search_complete == True and @variables.selected_opportunity_number == "":
+                | The grant results are ready - present them now, exactly as written below.
+                  Each grant shows its opportunity number in square brackets, for example
+                  [VETBIZ-26-011]:
+
+                  {!@variables.search_summary}
+
+                  Then ask: "Which grant would you like to apply for?" When the user picks one
+                  by number, position, or title, map it to that grant's opportunity number in
+                  square brackets and call the select_grant action. Do not present the list
+                  again after they choose.
+
+            # A grant was chosen - move to application preparation.
+            if @variables.selected_opportunity_number != "":
+                transition to @subagent.Application_Preparation
+        actions:
+            select_grant: @utils.setVariables
+                description: "Call after the user picks a grant. Saves selected_opportunity_number."
+                with selected_opportunity_number = ...
+# ==========================================================
+# PHASE 3 - APPLICATION PREPARATION & CHECKLIST
+# ==========================================================
+
+
+    actions:
+        search_grants:
+            description: "Search Grants.gov for opportunities matching the business, and cache the results."
+            inputs:
+                accountId: object
+                    complex_data_type_name: "lightning__textType"
+            outputs:
+                summaryForAgent: string
+                liveData: boolean
+                degradationReason: string
+            target: "apex://SearchGrantsAction"
+
+subagent Application_Preparation:
+    label: "Application Preparation"
+    description: "Creates the grant application and checklist for the chosen grant, then offers an AI-drafted executive summary."
+    model_config:
+        model: "model://sfdc_ai__DefaultBedrockAnthropicClaude46Opus"
+    reasoning:
+        instructions: ->
+            # Guard + create the application ONCE. Capture the resolved grant record Id so
+            # the draft action has a real Grant reference (the LLM only knows the number).
+            if @variables.account_id != "" and @variables.selected_opportunity_number != "" and @variables.application_id == "":
+                run @actions.create_application
+                    with inputAccountId = @variables.account_id
+                    with inputGrantOpportunityNumber = @variables.selected_opportunity_number
+                    set @variables.application_id = @outputs.outputApplicationId
+                    set @variables.selected_grant_id = @outputs.outputGrantId
+
+            #STEP 1a: application created, summary not yet requested. Confirm creation and OFFER
+            # the summary. Do NOT list any details here - just ask. When the user agrees, the
+            # get_application_summary action runs (it sets summary_text and flips the flag).
+            if @variables.application_id != "" and @variables.summary_card_shown == False:
+                | The grant application and its 6-item document checklist have been created and
+                  saved. In ONE short past-tense sentence confirm this, then ask exactly:
+                  "Would you like to see your application summary and document checklist?"
+                  When the user agrees (yes / sure / show me / okay), you MUST call the
+                  get_application_summary action exactly once. Ask nothing else in this step and
+                  do NOT call draft_executive_summary here.
+
+            #STEP 2: summary retrieved. Present the pre-formatted text verbatim (reliable
+            # fallback for channels where the custom Lightning type card does not render), THEN
+            # offer the executive-summary draft. Gated on draft_attempted so it presents once.
+            if @variables.summary_card_shown == True and @variables.draft_attempted == False:
+                | Do BOTH in this turn, in order:
+                  1. Present the application summary below EXACTLY as written, preserving its
+                     line breaks. Do NOT reformat it into a markdown table, do NOT add or remove
+                     any detail, and do NOT restate it in your own words.
+                     {!@variables.summary_text}
+                  2. On a new line after it, ask exactly: "Would you like me to draft an
+                     executive summary for your application?" When the user agrees, you MUST
+                     call the draft_executive_summary action exactly once.
+
+            #STEP 3: draft succeeded - present the draft text only.
+            if @variables.draft_attempted == True and @variables.executive_summary_draft != "":
+                | Present the drafted executive summary below, followed by this exact line:
+                  "This is an AI-assisted starting draft - please review and personalize
+                  before submitting."
+                  {!@variables.executive_summary_draft}
+                  Do NOT re-list the checklist or application details - the card already
+                  showed them.
+
+            #STEP 4: draft was attempted but produced nothing - reassure, do NOT loop.
+            if @variables.draft_attempted == True and @variables.executive_summary_draft == "":
+                | Tell the user the application and checklist are saved and ready, but the
+                  executive-summary draft could not be generated right now. Reassure them the
+                  application itself is complete, and offer to answer questions about next
+                  steps. Do not ask any profile questions again.
+        actions:
+            draft_executive_summary: @actions.draft_executive_summary
+                with "Input:Application" = @variables.application_id
+                with "Input:Business" = @variables.account_id
+                with "Input:Grant" = @variables.selected_grant_id
+                with outputLanguage = ...
+                with isPreviewOnly = ...
+                set @variables.draft_attempted = True
+                set @variables.executive_summary_draft = @outputs.promptResponse
+            # LLM-invoked (NOT a `run`) so its custom-Lightning-type output can render as the
+            # applicationSummary card where supported. We capture the plain-text summary into a
+            # variable for the reliable fallback, and flip the guard flag. The complex `summary`
+            # output is left uncaptured so it can still bind to the CLT renderer.
+            get_application_summary: @actions.get_application_summary
+                with applicationId = @variables.application_id
+                set @variables.summary_text = @outputs.summaryText
+                set @variables.summary_card_shown = True
+                
+# ==========================================================
+# PHASE 4 - ESCALATION (HITL)
+# ==========================================================
+
+
+    actions:
+        create_application:
+            description: "Create a Grant Application and seed a baseline document checklist. Resolves the grant by its opportunity number."
+            inputs:
+                inputAccountId: string
+                inputGrantOpportunityNumber: string
+                inputGrantOpportunityId: string
+            outputs:
+                outputApplicationId: string
+                outputGrantId: string
+            target: "flow://Create_Application_And_Checklist"
+
+        draft_executive_summary:
+            description: "Draft a 450-500 word executive summary grounded in the application, business, and grant records."
+            inputs:
+                "Input:Grant": object
+                    label: "Grant"
+                    description: "Grant Opportunity object"
+                    is_required: True
+                    complex_data_type_name: "lightning__recordInfoType"
+                "Input:Business": object
+                    label: "Business"
+                    description: "Account object"
+                    is_required: True
+                    complex_data_type_name: "lightning__recordInfoType"
+                "Input:Application": object
+                    label: "Application"
+                    description: "Grant Application object"
+                    is_required: True
+                    complex_data_type_name: "lightning__recordInfoType"
+                outputLanguage: string
+                    label: "Output language"
+                    description: "Optional response language code."
+                    is_required: False
+                    complex_data_type_name: "lightning__textType"
+                isPreviewOnly: boolean
+                    label: "Preview Only"
+                    description: "Resolves the prompt template without generating an LLM response."
+                    is_required: False
+                    complex_data_type_name: "lightning__booleanType"
+            outputs:
+                promptResponse: string
+                    label: "Prompt Response"
+                    description: "The generated executive summary."
+                    complex_data_type_name: "lightning__textType"
+                    is_displayable: False
+                    filter_from_agent: False
+                generationId: string
+                    label: "Prompt Generation ID"
+                    description: "Identifier for the prompt generation."
+                    complex_data_type_name: "lightning__textType"
+                    is_displayable: False
+                    filter_from_agent: False
+            target: "generatePromptResponse://Draft_Grant_Executive_Summary"
+            label: "Draft Executive Summary"
+
+        get_application_summary:
+            description: "Return the grant application summary and document checklist, rendered as the applicationSummary card."
+            inputs:
+                applicationId: string
+                    label: "Grant Application Id"
+                    description: "The Grant Application record Id to summarize."
+                    is_required: True
+                    complex_data_type_name: "lightning__textType"
+            outputs:
+                summary: object
+                    label: "Application Summary"
+                    description: "The application summary and checklist."
+                    complex_data_type_name: "c__applicationSummary"
+                    is_displayable: True
+                    filter_from_agent: True
+                summaryText: string
+                    label: "Application Summary Text"
+                    description: "Pre-formatted plain-text application summary and checklist."
+                    complex_data_type_name: "lightning__textType"
+                    is_displayable: False
+                    filter_from_agent: False
+            target: "apex://GetApplicationSummaryAction"
+            label: "Get Application Summary"
+
+subagent Escalation:
+    label: "Escalation"
+    description: "Creates a Case and hands off to a human for out-of-scope, adversarial, or requested-human cases."
+    reasoning:
+        instructions: ->
+            | You MUST call the escalate_to_human action right away. Extract a short reason
+              for the escalation and a one-line summary of the conversation so far to pass
+              into it. Then briefly and empathetically confirm that a human specialist has
+              been notified and will follow up. Do not try to resolve the issue yourself, and
+              do not give legal, tax, immigration, or medical advice.
+        actions:
+            # escalate_to_human is LLM-invoked here so its slot-filled (...) inputs can be
+            # resolved from the conversation. Slot-fill is valid in reasoning.actions but NOT
+            # inside a deterministic `run` - that was the "unexpected error" on entry.
+            escalate_to_human: @actions.escalate_to_human
+                with inputAccountId = @variables.account_id
+                with inputReason = ...
+                with inputTranscriptSummary = ...
+                with inputApplicationId = @variables.application_id
+            transfer_to_human: @utils.escalate
+                description: "Transfer the live conversation to a human support representative."
+# ==========================================================
+# PHASE 5a - CERTIFICATION GUIDANCE (reference only)
+# ==========================================================
+
+
+    actions:
+        escalate_to_human:
+            description: "Create a Case in the escalation queue and link it to the application."
+            inputs:
+                inputAccountId: string
+                inputReason: string
+                inputTranscriptSummary: string
+                inputApplicationId: string
+            outputs:
+                outputCaseId: string
+            target: "flow://Escalate_To_Human"
+
+subagent Certification_Guidance:
+    label: "Certification Guidance"
+    description: "Explains SBA and set-aside certification pathways: 8a, WOSB, EDWOSB, VOSB, SDVOSB, HUBZone, MBE."
+    model_config:
+        model: "model://sfdc_ai__DefaultBedrockAnthropicClaude46Opus"
+    reasoning:
+        instructions: |
+            Give reference information about SBA and set-aside certifications. For each
+            program the user asks about, state who administers it, high-level eligibility,
+            and the official site as informational guidelines only:
+            - VOSB / SDVOSB: veterans.certify.sba.gov
+            - 8a / WOSB / EDWOSB: certify.sba.gov
+            - HUBZone: sba.gov/hubzone
+            - UEI / SAM registration: sam.gov
+            Never say the user IS eligible - say "you may qualify; the certifying body
+            decides."
+
+# ==========================================================
+# PHASE 5b - OFF TOPIC (deflect, then escalate)
+# ==========================================================
+
+subagent Off_Topic:
+    label: "Off Topic"
+    description: "Deflects requests outside the grant scope, then routes to Escalation."
+    reasoning:
+        instructions: ->
+            | Politely tell the user this is outside what you can help with - you focus on
+              federal grants for small businesses.
+            transition to @subagent.Escalation
+
+# ==========================================================
+# Ambiguous Question (clarify)
+# ==========================================================
+
+subagent Ambiguous_Question:
+    label: "Ambiguous Question"
+    description: "Handles unclear intent by asking one clarifying question."
+    reasoning:
+        instructions: |
+            Ask one short clarifying question to learn whether the user wants to find grants,
+            prepare an application, or ask about certifications. Keep it to one sentence.
+
+connection messaging:
+    outbound_route_type: "OmniChannelFlow"
+    outbound_route_name: "flow://Escalate_to_Human_Queue"
+    escalation_message: "One moment, I'm transferring our conversation to get you more help."
+    adaptive_response_allowed: True

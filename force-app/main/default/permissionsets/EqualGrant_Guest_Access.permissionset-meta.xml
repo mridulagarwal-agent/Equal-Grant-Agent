@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PermissionSet xmlns="http://soap.sforce.com/2006/04/metadata">
+    <label>EqualGrant Guest Access</label>
+    <description>Read access for the Experience Cloud guest user: cached grant opportunities (grantResultsPanel) and the Impact dashboard (equalStartImpact). Assign via the site's Guest User Profile / Guest Access permission sets.</description>
+    <hasActivationRequired>false</hasActivationRequired>
+
+    <!-- ================= Apex controllers ================= -->
+    <classAccesses>
+        <apexClass>GrantsGovController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+    <classAccesses>
+        <apexClass>ImpactDashboardController</apexClass>
+        <enabled>true</enabled>
+    </classAccesses>
+
+    <!-- ================= Object permissions (all grouped) ================= -->
+    <objectPermissions>
+        <object>Grant_Opportunity__c</object>
+        <allowCreate>false</allowCreate>
+        <allowDelete>false</allowDelete>
+        <allowEdit>false</allowEdit>
+        <allowRead>true</allowRead>
+        <modifyAllRecords>false</modifyAllRecords>
+        <viewAllRecords>false</viewAllRecords>
+    </objectPermissions>
+    <!-- NOTE: The Guest User license in this org does NOT permit read on Account,
+         Grant_Application__c, or Checklist_Item__c via a permission set (a license
+         restriction, not a config gap). The Impact dashboard (equalStartImpact) therefore
+         cannot run as a GUEST - deploy it on an AUTHENTICATED page instead. This permission
+         set covers only the guest-safe piece: Grant_Opportunity__c read (grantResultsPanel). -->
+
+    <!-- ================= Field-level security (all grouped) ================= -->
+    <!-- Grant_Opportunity__c (grantResultsPanel + impact). Opportunity_Number__c is required, FLS implicit. -->
+    <fieldPermissions>
+        <field>Grant_Opportunity__c.Title__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Grant_Opportunity__c.Agency__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Grant_Opportunity__c.Agency_Code__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Grant_Opportunity__c.Award_Ceiling__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Grant_Opportunity__c.Close_Date__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Grant_Opportunity__c.Open_Date__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Grant_Opportunity__c.Match_Rationale__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Grant_Opportunity__c.Opportunity_ID__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Grant_Opportunity__c.Last_Refreshed__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <field>Grant_Opportunity__c.Status__c</field>
+        <readable>true</readable>
+        <editable>false</editable>
+    </fieldPermissions>
+
+</PermissionSet>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RemoteSiteSetting xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Fallback remote site for direct callouts to Grants.gov if the Named Credential path is unavailable. Public API - no auth.</description>
+    <disableProtocolSecurity>false</disableProtocolSecurity>
+    <isActive>true</isActive>
+    <url>https://api.grants.gov</url>
+</RemoteSiteSetting>

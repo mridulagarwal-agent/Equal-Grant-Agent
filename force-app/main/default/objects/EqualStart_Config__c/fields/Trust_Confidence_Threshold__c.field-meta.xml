@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Trust_Confidence_Threshold__c</fullName>
+    <defaultValue>70</defaultValue>
+    <description>Minimum agent action confidence (0-100) before the response is presented without a HITL nudge.</description>
+    <externalId>false</externalId>
+    <label>Trust Confidence Threshold</label>
+    <precision>3</precision>
+    <required>false</required>
+    <scale>0</scale>
+    <trackTrending>false</trackTrending>
+    <type>Number</type>
+    <unique>false</unique>
+</CustomField>

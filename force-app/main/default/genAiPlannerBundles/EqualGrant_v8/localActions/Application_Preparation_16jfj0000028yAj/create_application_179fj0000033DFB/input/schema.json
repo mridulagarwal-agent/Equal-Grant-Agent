@@ -1,0 +1,28 @@
+{
+  "required" : [ ],
+  "unevaluatedProperties" : false,
+  "properties" : {
+    "inputAccountId" : {
+      "title" : "Input Account Id",
+      "description" : "Input Account Id",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputGrantOpportunityId" : {
+      "title" : "Input Grant Opportunity Id",
+      "description" : "Input Grant Opportunity Id",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    },
+    "inputGrantOpportunityNumber" : {
+      "title" : "Input Grant Opportunity Number",
+      "description" : "Input Grant Opportunity Number",
+      "lightning:type" : "lightning__textType",
+      "lightning:isPII" : false,
+      "copilotAction:isUserInput" : false
+    }
+  },
+  "lightning:type" : "lightning__objectType"
+}

@@ -1,0 +1,5 @@
+{
+  "title": "Application Summary",
+  "description": "Grant application summary with document checklist",
+  "lightning:type": "@apexClassType/c__ApplicationSummary"
+}

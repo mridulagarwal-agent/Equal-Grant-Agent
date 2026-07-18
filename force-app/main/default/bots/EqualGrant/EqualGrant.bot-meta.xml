@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Bot xmlns="http://soap.sforce.com/2006/04/metadata">
+    <agentDSLEnabled>true</agentDSLEnabled>
+    <agentType>EinsteinServiceAgent</agentType>
+    <botMlDomain>
+        <label>Equal Grant</label>
+        <name>EqualGrant</name>
+    </botMlDomain>
+    <botSource>None</botSource>
+    <botUser>equalgrantagent@orgfarm.com</botUser>
+    <description>Pro-bono grant advisor for minority-, woman-, and veteran-owned small businesses. Collects a business profile, finds federal grants, and prepares applications.</description>
+    <label>Equal Grant</label>
+    <logPrivateConversationData>false</logPrivateConversationData>
+    <richContentEnabled>true</richContentEnabled>
+    <sessionTimeout>0</sessionTimeout>
+    <type>ExternalCopilot</type>
+</Bot>

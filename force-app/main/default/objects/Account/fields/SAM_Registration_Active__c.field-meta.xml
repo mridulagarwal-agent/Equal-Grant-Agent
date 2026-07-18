@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>SAM_Registration_Active__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>True when the applicant confirms an active SAM.gov registration.</description>
+    <externalId>false</externalId>
+    <label>SAM Registration Active</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

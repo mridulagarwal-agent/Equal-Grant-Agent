@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Queue xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>This is for routing to agents</description>
+    <doesIncludeBosses>true</doesIncludeBosses>
+    <doesSendEmailToMembers>true</doesSendEmailToMembers>
+    <email>y.shah@salesforce.com</email>
+    <name>Equal Grant Queue</name>
+    <queueMembers>
+        <publicGroups>
+            <publicGroup>Equal_Grant_Group</publicGroup>
+        </publicGroups>
+        <users>
+            <user>y.shah@salesforce.com.afhack</user>
+        </users>
+    </queueMembers>
+    <queueRoutingConfig>Messaging_Fallback_Routing</queueRoutingConfig>
+    <queueSobject>
+        <sobjectType>MessagingSession</sobjectType>
+    </queueSobject>
+</Queue>

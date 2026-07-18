@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Executive_Summary_Draft__c</fullName>
+    <description>AI-drafted executive summary from Draft_Grant_Executive_Summary Prompt Template. Watermarked "AI-assisted draft - reviewed by applicant".</description>
+    <externalId>false</externalId>
+    <label>Executive Summary Draft</label>
+    <length>32000</length>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>15</visibleLines>
+</CustomField>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Escalation_Required__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Set by post-process guardrail when Confidence_Score is below threshold or a fenced intent is detected.</description>
+    <externalId>false</externalId>
+    <label>Escalation Required</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

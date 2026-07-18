@@ -1,0 +1,119 @@
+<template>
+    <section class="es-impact slds-p-around_large" role="region" aria-label="Capital unlocked impact dashboard">
+
+        <header class="slds-m-bottom_medium">
+            <h1 class="es-title">Capital unlocked</h1>
+        </header>
+
+        <template lwc:if={isLoading}>
+            <lightning-spinner alternative-text="Loading impact data" size="medium"></lightning-spinner>
+        </template>
+
+        <template lwc:if={error}>
+            <div class="slds-notify slds-notify_alert slds-alert_error" role="alert">
+                <p>{error}</p>
+            </div>
+        </template>
+
+        <!-- KPI CARDS -->
+        <template lwc:if={kpis}>
+            <div class="es-kpis">
+                <div class="es-kpi">
+                    <span class="es-kpi__num">{kpis.businessesHelped}</span>
+                    <span class="es-kpi__label">Businesses helped</span>
+                </div>
+                <div class="es-kpi">
+                    <span class="es-kpi__num">{kpis.grantsMatched}</span>
+                    <span class="es-kpi__label">Grants matched</span>
+                </div>
+                <div class="es-kpi">
+                    <span class="es-kpi__num">{kpis.potentialCapital}</span>
+                    <span class="es-kpi__label">Potential capital surfaced</span>
+                </div>
+                <div class="es-kpi">
+                    <span class="es-kpi__num">{kpis.applicationsInProgress}</span>
+                    <span class="es-kpi__label">Applications in progress</span>
+                    <!--<span class="es-kpi__delta">{kpis.docsReady} docs-ready</span>-->
+                </div>
+            </div>
+        </template>
+
+        <div class="es-grid">
+            <!-- MATCHES BY OPERATING STATE -->
+            <div class="es-panel">
+                <h2 class="es-panel__title">Matches surfaced by operating state</h2>
+                <template lwc:if={hasStates}>
+                    <div class="es-bars" role="img" aria-label="Bar chart of grant applications by operating state">
+                        <template for:each={states} for:item="m">
+                            <div key={m.key} class="es-bar">
+                                <div class="es-bar__fill" style={m.barStyle}></div>
+                                <span class="es-bar__label">{m.stateLabel}</span>
+                            </div>
+                        </template>
+                    </div>
+                </template>
+                <template lwc:else>
+                    <p class="slds-text-color_weak">No applications yet for the available operating states.</p>
+                </template>
+            </div>
+
+            <!-- OWNERSHIP BREAKDOWN -->
+            <div class="es-panel">
+                <h2 class="es-panel__title">Matches by ownership category</h2>
+                <p class="es-panel__sub">Self-declared. Used only to widen set-aside discovery &mdash; never to exclude.</p>
+                <template for:each={ownership} for:item="o">
+                    <div key={o.key} class="es-own">
+                        <div class="es-own__row">
+                            <span class="es-own__label">{o.label}</span>
+                            <span class="es-own__pct">{o.percent}%</span>
+                        </div>
+                        <div class="es-own__track">
+                            <div class="es-own__fill" style={o.barStyle}></div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+        </div>
+
+        <!-- RECENT APPLICATIONS + CHECKLISTS -->
+        <template lwc:if={showRecentApps}>
+            <h2 class="es-section-title">Recent grant applications</h2>
+            <div class="es-apps">
+                <template for:each={apps} for:item="a">
+                    <article key={a.applicationId} class="es-panel es-appcard">
+                        <header class="slds-grid slds-grid_align-spread slds-grid_vertical-align-start">
+                            <div>
+                                <h3 class="es-appcard__grant">{a.grantTitle}</h3>
+                                <p class="es-appcard__meta">{a.businessName} &middot; {a.agency}</p>
+                                <p class="es-appcard__num">{a.applicationName}</p>
+                            </div>
+                            <span class={a.statusClass}>{a.status}</span>
+                        </header>
+
+                        <div class="es-appcard__progress">
+                            <div class="slds-grid slds-grid_align-spread">
+                                <span class="slds-text-title">Readiness</span>
+                                <span class="slds-text-body_small">{a.readinessLabel}</span>
+                            </div>
+                            <div class="es-progress">
+                                <div class="es-progress__fill" style={a.progressStyle}></div>
+                            </div>
+                        </div>
+
+                        <ul class="es-checklist" role="list">
+                            <template for:each={a.checklist} for:item="c">
+                                <li key={c.id} class={c.rowClass}>
+                                    <lightning-icon icon-name={c.iconName} size="xx-small"
+                                        variant={c.iconVariant} class="slds-m-right_x-small">
+                                    </lightning-icon>
+                                    <span class="es-checklist__name">{c.name}</span>
+                                    <span class="es-checklist__cat">{c.category}</span>
+                                </li>
+                            </template>
+                        </ul>
+                    </article>
+                </template>
+            </div>
+        </template>
+    </section>
+</template>

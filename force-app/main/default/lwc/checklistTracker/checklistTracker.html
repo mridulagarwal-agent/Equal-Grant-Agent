@@ -1,0 +1,86 @@
+<template>
+    <section class="slds-card slds-p-around_medium" role="region" aria-labelledby="checklist-heading">
+        <header class="slds-m-bottom_small">
+            <h2 id="checklist-heading" class="slds-text-heading_medium">
+                Document readiness checklist
+            </h2>
+            <p class="slds-text-body_small slds-text-color_weak">
+                Toggle each item as you gather it. Progress saves automatically.
+            </p>
+        </header>
+
+        <template lwc:if={hasItems}>
+            <div class="slds-m-vertical_small" role="group" aria-labelledby="progress-label">
+                <div class="slds-grid slds-grid_align-spread">
+                    <span id="progress-label" class="slds-text-title">Readiness</span>
+                    <span aria-hidden="true">{progressLabel}</span>
+                </div>
+                <div class="slds-progress-bar" role="progressbar"
+                     aria-labelledby="progress-label"
+                     aria-valuenow={progressPct} aria-valuemin="0" aria-valuemax="100">
+                    <span class="slds-progress-bar__value" style={progressBarStyle}>
+                        <span class="slds-assistive-text">{progressLabel}</span>
+                    </span>
+                </div>
+            </div>
+        </template>
+
+        <div class="slds-assistive-text" aria-live="polite" aria-atomic="true">
+            {statusAnnouncement}
+        </div>
+
+        <template lwc:if={isDone}>
+            <div class="slds-notify slds-notify_alert slds-theme_success" role="status">
+                <p>All documents ready — you are cleared to submit.</p>
+            </div>
+        </template>
+
+        <template lwc:if={hasItems}>
+            <template for:each={groups} for:item="grp">
+                <fieldset key={grp.key} class="slds-form-element slds-m-top_medium">
+                    <legend class="slds-form-element__legend slds-form-element__label">
+                        {grp.label}
+                    </legend>
+                    <ul class="slds-has-dividers_bottom-space" role="list">
+                        <template for:each={grp.items} for:item="item">
+                            <li key={item.id} class="slds-item slds-p-around_x-small" role="listitem">
+                                <div class="slds-grid slds-grid_vertical-align-start">
+                                    <div class="slds-form-element__control slds-m-right_small">
+                                        <input type="checkbox"
+                                               id={item.inputId}
+                                               data-id={item.id}
+                                               checked={item.done}
+                                               onchange={handleToggle}
+                                               aria-describedby={item.hintId} />
+                                    </div>
+                                    <div class="slds-grow">
+                                        <label for={item.inputId}
+                                               class="slds-form-element__label slds-text-body_regular">
+                                            <strong>{item.name}</strong>
+                                        </label>
+                                        <p id={item.hintId}
+                                           class="slds-text-body_small slds-text-color_weak">
+                                            {item.guidance}
+                                        </p>
+                                    </div>
+                                    <div class="slds-text-body_small slds-text-color_weak">
+                                        <lightning-formatted-date-time
+                                            value={item.dueDate}
+                                            year="numeric" month="short" day="2-digit">
+                                        </lightning-formatted-date-time>
+                                    </div>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </fieldset>
+            </template>
+        </template>
+
+        <template lwc:if={showEmptyState}>
+            <p class="slds-text-body_regular slds-text-color_weak slds-p-vertical_medium">
+                No checklist items yet. Once you start an application, the checklist appears here.
+            </p>
+        </template>
+    </section>
+</template>

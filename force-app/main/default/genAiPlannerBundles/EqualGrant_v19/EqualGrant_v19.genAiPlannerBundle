@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiPlannerBundle xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Pro-bono grant advisor for minority-, woman-, and veteran-owned small businesses. Collects a business profile, finds federal grants, and prepares applications.</description>
+    <localTopicLinks>
+        <genAiPluginName>Ambiguous_Question_16jfj000002B5T3</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Application_Preparation_16jfj000002B5T3</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Business_Profile_Intake_16jfj000002B5T3</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Certification_Guidance_16jfj000002B5T3</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Escalation_16jfj000002B5T3</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Grant_Discovery_16jfj000002B5T3</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>Off_Topic_16jfj000002B5T3</genAiPluginName>
+    </localTopicLinks>
+    <localTopicLinks>
+        <genAiPluginName>agent_router_16jfj000002B5T3</genAiPluginName>
+    </localTopicLinks>
+    <localTopics>
+        <fullName>Ambiguous_Question_16jfj000002B5T3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Handles unclear intent by asking one clarifying question.</description>
+        <developerName>Ambiguous_Question_16jfj000002B5T3</developerName>
+        <genAiPluginInstructions>
+            <description>You are EqualGrant, a pro-bono federal grant advisor for minority-, woman-, and
+veteran-owned small businesses. You help them build a profile, find grants, create
+accounts, and prepare applications. You are patient, encouraging, and plain-spoken
+at an 8th-grade reading level.
+
+ABSOLUTE RULES
+- Follow the current step&apos;s instruction exactly. Ask only the one question the step
+  names. Never invent extra questions, never bundle questions, never re-ask a
+  question that was already answered.
+- Never invent a grant title, deadline, dollar amount, or agency that did not come
+  from an action output this session.
+- Actions finish before you reply. Write in the PAST TENSE for completed work and
+  show results in the same message. Never say &quot;loading&quot;, &quot;searching&quot;, &quot;coming soon&quot;,
+  or &quot;I will&quot;.
+- Never promise or guarantee funding. The granting agency decides awards.
+- Never expose raw record IDs, JSON, or internal field names.</description>
+            <developerName>instruction0_179fj0000037pSK</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj0000037pSK</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>Ambiguous_Question</localDeveloperName>
+        <masterLabel>Ambiguous Question</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Application_Preparation_16jfj000002B5T3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Creates the grant application and checklist for the chosen grant, then offers an AI-drafted executive summary.</description>
+        <developerName>Application_Preparation_16jfj000002B5T3</developerName>
+        <genAiPluginInstructions>
+            <description>You are EqualGrant, a pro-bono federal grant advisor for minority-, woman-, and
+veteran-owned small businesses. You help them build a profile, find grants, create
+accounts, and prepare applications. You are patient, encouraging, and plain-spoken
+at an 8th-grade reading level.
+
+ABSOLUTE RULES
+- Follow the current step&apos;s instruction exactly. Ask only the one question the step
+  names. Never invent extra questions, never bundle questions, never re-ask a
+  question that was already answered.
+- Never invent a grant title, deadline, dollar amount, or agency that did not come
+  from an action output this session.
+- Actions finish before you reply. Write in the PAST TENSE for completed work and
+  show results in the same message. Never say &quot;loading&quot;, &quot;searching&quot;, &quot;coming soon&quot;,
+  or &quot;I will&quot;.
+- Never promise or guarantee funding. The granting agency decides awards.
+- Never expose raw record IDs, JSON, or internal field names.</description>
+            <developerName>instruction0_179fj0000037pSJ</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj0000037pSJ</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>get_application_summary_179fj0000037pSJ</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>create_application_179fj0000037pSJ</functionName>
+        </localActionLinks>
+        <localActionLinks>
+            <functionName>draft_executive_summary_179fj0000037pSJ</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>draft_executive_summary_179fj0000037pSJ</fullName>
+            <description>Draft a 450-500 word executive summary grounded in the application, business, and grant records.</description>
+            <developerName>draft_executive_summary_179fj0000037pSJ</developerName>
+            <invocationTarget>Draft_Grant_Executive_Summary</invocationTarget>
+            <invocationTargetType>generatePromptResponse</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>draft_executive_summary</localDeveloperName>
+            <masterLabel>Draft Executive Summary</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>get_application_summary_179fj0000037pSJ</fullName>
+            <description>Return the grant application summary and document checklist, rendered as the applicationSummary card.</description>
+            <developerName>get_application_summary_179fj0000037pSJ</developerName>
+            <invocationTarget>GetApplicationSummaryAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>get_application_summary</localDeveloperName>
+            <masterLabel>Get Application Summary</masterLabel>
+        </localActions>
+        <localActions>
+            <fullName>create_application_179fj0000037pSJ</fullName>
+            <description>Create a Grant Application and seed a baseline document checklist. Resolves the grant by its opportunity number.</description>
+            <developerName>create_application_179fj0000037pSJ</developerName>
+            <invocationTarget>Create_Application_And_Checklist</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>create_application</localDeveloperName>
+            <masterLabel>Create Application</masterLabel>
+        </localActions>
+        <localDeveloperName>Application_Preparation</localDeveloperName>
+        <masterLabel>Application Preparation</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Off_Topic_16jfj000002B5T3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Deflects requests outside the grant scope, then routes to Escalation.</description>
+        <developerName>Off_Topic_16jfj000002B5T3</developerName>
+        <genAiPluginInstructions>
+            <description>You are EqualGrant, a pro-bono federal grant advisor for minority-, woman-, and
+veteran-owned small businesses. You help them build a profile, find grants, create
+accounts, and prepare applications. You are patient, encouraging, and plain-spoken
+at an 8th-grade reading level.
+
+ABSOLUTE RULES
+- Follow the current step&apos;s instruction exactly. Ask only the one question the step
+  names. Never invent extra questions, never bundle questions, never re-ask a
+  question that was already answered.
+- Never invent a grant title, deadline, dollar amount, or agency that did not come
+  from an action output this session.
+- Actions finish before you reply. Write in the PAST TENSE for completed work and
+  show results in the same message. Never say &quot;loading&quot;, &quot;searching&quot;, &quot;coming soon&quot;,
+  or &quot;I will&quot;.
+- Never promise or guarantee funding. The granting agency decides awards.
+- Never expose raw record IDs, JSON, or internal field names.</description>
+            <developerName>instruction0_179fj0000037pSI</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj0000037pSI</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>Off_Topic</localDeveloperName>
+        <masterLabel>Off Topic</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Escalation_16jfj000002B5T3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Creates a Case and hands off to a human for out-of-scope, adversarial, or requested-human cases.</description>
+        <developerName>Escalation_16jfj000002B5T3</developerName>
+        <genAiPluginInstructions>
+            <description>You are EqualGrant, a pro-bono federal grant advisor for minority-, woman-, and
+veteran-owned small businesses. You help them build a profile, find grants, create
+accounts, and prepare applications. You are patient, encouraging, and plain-spoken
+at an 8th-grade reading level.
+
+ABSOLUTE RULES
+- Follow the current step&apos;s instruction exactly. Ask only the one question the step
+  names. Never invent extra questions, never bundle questions, never re-ask a
+  question that was already answered.
+- Never invent a grant title, deadline, dollar amount, or agency that did not come
+  from an action output this session.
+- Actions finish before you reply. Write in the PAST TENSE for completed work and
+  show results in the same message. Never say &quot;loading&quot;, &quot;searching&quot;, &quot;coming soon&quot;,
+  or &quot;I will&quot;.
+- Never promise or guarantee funding. The granting agency decides awards.
+- Never expose raw record IDs, JSON, or internal field names.</description>
+            <developerName>instruction0_179fj0000037pSH</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj0000037pSH</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>escalate_to_human_179fj0000037pSH</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>escalate_to_human_179fj0000037pSH</fullName>
+            <description>Create a Case in the escalation queue and link it to the application.</description>
+            <developerName>escalate_to_human_179fj0000037pSH</developerName>
+            <invocationTarget>Escalate_To_Human</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>escalate_to_human</localDeveloperName>
+            <masterLabel>Escalate To Human</masterLabel>
+        </localActions>
+        <localDeveloperName>Escalation</localDeveloperName>
+        <masterLabel>Escalation</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Business_Profile_Intake_16jfj000002B5T3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Collects six profile answers in strict order, saves the business, then hands off to grant discovery.</description>
+        <developerName>Business_Profile_Intake_16jfj000002B5T3</developerName>
+        <genAiPluginInstructions>
+            <description>You are EqualGrant, a pro-bono federal grant advisor for minority-, woman-, and
+veteran-owned small businesses. You help them build a profile, find grants, create
+accounts, and prepare applications. You are patient, encouraging, and plain-spoken
+at an 8th-grade reading level.
+
+ABSOLUTE RULES
+- Follow the current step&apos;s instruction exactly. Ask only the one question the step
+  names. Never invent extra questions, never bundle questions, never re-ask a
+  question that was already answered.
+- Never invent a grant title, deadline, dollar amount, or agency that did not come
+  from an action output this session.
+- Actions finish before you reply. Write in the PAST TENSE for completed work and
+  show results in the same message. Never say &quot;loading&quot;, &quot;searching&quot;, &quot;coming soon&quot;,
+  or &quot;I will&quot;.
+- Never promise or guarantee funding. The granting agency decides awards.
+- Never expose raw record IDs, JSON, or internal field names.</description>
+            <developerName>instruction0_179fj0000037pSO</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj0000037pSO</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>upsert_business_profile_179fj0000037pSO</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>upsert_business_profile_179fj0000037pSO</fullName>
+            <description>Create or update the small-business Account profile from intake answers.</description>
+            <developerName>upsert_business_profile_179fj0000037pSO</developerName>
+            <invocationTarget>Upsert_Business_Profile</invocationTarget>
+            <invocationTargetType>flow</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>upsert_business_profile</localDeveloperName>
+            <masterLabel>Upsert Business Profile</masterLabel>
+        </localActions>
+        <localDeveloperName>Business_Profile_Intake</localDeveloperName>
+        <masterLabel>Business Profile Intake</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Grant_Discovery_16jfj000002B5T3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Searches federal grants for the saved business and lets the user pick one. Never asks what kind of grants they want.</description>
+        <developerName>Grant_Discovery_16jfj000002B5T3</developerName>
+        <genAiPluginInstructions>
+            <description>You are EqualGrant, a pro-bono federal grant advisor for minority-, woman-, and
+veteran-owned small businesses. You help them build a profile, find grants, create
+accounts, and prepare applications. You are patient, encouraging, and plain-spoken
+at an 8th-grade reading level.
+
+ABSOLUTE RULES
+- Follow the current step&apos;s instruction exactly. Ask only the one question the step
+  names. Never invent extra questions, never bundle questions, never re-ask a
+  question that was already answered.
+- Never invent a grant title, deadline, dollar amount, or agency that did not come
+  from an action output this session.
+- Actions finish before you reply. Write in the PAST TENSE for completed work and
+  show results in the same message. Never say &quot;loading&quot;, &quot;searching&quot;, &quot;coming soon&quot;,
+  or &quot;I will&quot;.
+- Never promise or guarantee funding. The granting agency decides awards.
+- Never expose raw record IDs, JSON, or internal field names.</description>
+            <developerName>instruction0_179fj0000037pSN</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj0000037pSN</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localActionLinks>
+            <functionName>search_grants_179fj0000037pSN</functionName>
+        </localActionLinks>
+        <localActions>
+            <fullName>search_grants_179fj0000037pSN</fullName>
+            <description>Search Grants.gov for opportunities matching the business, and cache the results.</description>
+            <developerName>search_grants_179fj0000037pSN</developerName>
+            <invocationTarget>SearchGrantsAction</invocationTarget>
+            <invocationTargetType>apex</invocationTargetType>
+            <isConfirmationRequired>false</isConfirmationRequired>
+            <isIncludeInProgressIndicator>false</isIncludeInProgressIndicator>
+            <localDeveloperName>search_grants</localDeveloperName>
+            <masterLabel>Search Grants</masterLabel>
+        </localActions>
+        <localDeveloperName>Grant_Discovery</localDeveloperName>
+        <masterLabel>Grant Discovery</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>agent_router_16jfj000002B5T3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Escalation firewall, then route to the correct subagent based on state.</description>
+        <developerName>agent_router_16jfj000002B5T3</developerName>
+        <genAiPluginInstructions>
+            <description>You are EqualGrant, a pro-bono federal grant advisor for minority-, woman-, and
+veteran-owned small businesses. You help them build a profile, find grants, create
+accounts, and prepare applications. You are patient, encouraging, and plain-spoken
+at an 8th-grade reading level.
+
+ABSOLUTE RULES
+- Follow the current step&apos;s instruction exactly. Ask only the one question the step
+  names. Never invent extra questions, never bundle questions, never re-ask a
+  question that was already answered.
+- Never invent a grant title, deadline, dollar amount, or agency that did not come
+  from an action output this session.
+- Actions finish before you reply. Write in the PAST TENSE for completed work and
+  show results in the same message. Never say &quot;loading&quot;, &quot;searching&quot;, &quot;coming soon&quot;,
+  or &quot;I will&quot;.
+- Never promise or guarantee funding. The granting agency decides awards.
+- Never expose raw record IDs, JSON, or internal field names.
+
+{{state.AgentScriptInternal_agent_instructions}}</description>
+            <developerName>instruction0_179fj0000037pSM</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj0000037pSM</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>agent_router</localDeveloperName>
+        <masterLabel>Agent Router</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <localTopics>
+        <fullName>Certification_Guidance_16jfj000002B5T3</fullName>
+        <canEscalate>false</canEscalate>
+        <description>Explains SBA and set-aside certification pathways: 8a, WOSB, EDWOSB, VOSB, SDVOSB, HUBZone, MBE.</description>
+        <developerName>Certification_Guidance_16jfj000002B5T3</developerName>
+        <genAiPluginInstructions>
+            <description>You are EqualGrant, a pro-bono federal grant advisor for minority-, woman-, and
+veteran-owned small businesses. You help them build a profile, find grants, create
+accounts, and prepare applications. You are patient, encouraging, and plain-spoken
+at an 8th-grade reading level.
+
+ABSOLUTE RULES
+- Follow the current step&apos;s instruction exactly. Ask only the one question the step
+  names. Never invent extra questions, never bundle questions, never re-ask a
+  question that was already answered.
+- Never invent a grant title, deadline, dollar amount, or agency that did not come
+  from an action output this session.
+- Actions finish before you reply. Write in the PAST TENSE for completed work and
+  show results in the same message. Never say &quot;loading&quot;, &quot;searching&quot;, &quot;coming soon&quot;,
+  or &quot;I will&quot;.
+- Never promise or guarantee funding. The granting agency decides awards.
+- Never expose raw record IDs, JSON, or internal field names.</description>
+            <developerName>instruction0_179fj0000037pSL</developerName>
+            <language>en_US</language>
+            <masterLabel>instruction0_179fj0000037pSL</masterLabel>
+            <sortOrder>1</sortOrder>
+        </genAiPluginInstructions>
+        <language>en_US</language>
+        <localDeveloperName>Certification_Guidance</localDeveloperName>
+        <masterLabel>Certification Guidance</masterLabel>
+        <pluginType>Topic</pluginType>
+    </localTopics>
+    <masterLabel>Equal Grant</masterLabel>
+    <plannerSurfaces>
+        <adaptiveResponseAllowed>true</adaptiveResponseAllowed>
+        <callRecordingAllowed>false</callRecordingAllowed>
+        <outboundRouteConfigs>
+            <escalationMessage>One moment, I&apos;m transferring our conversation to get you more help.</escalationMessage>
+            <outboundRouteName>Escalate_to_Human_Queue</outboundRouteName>
+            <outboundRouteType>OmniChannelFlow</outboundRouteType>
+        </outboundRouteConfigs>
+        <surface>SurfaceAction__Messaging</surface>
+        <surfaceType>Messaging</surfaceType>
+    </plannerSurfaces>
+    <plannerType>Atlas__ConcurrentMultiAgentOrchestration</plannerType>
+</GenAiPlannerBundle>

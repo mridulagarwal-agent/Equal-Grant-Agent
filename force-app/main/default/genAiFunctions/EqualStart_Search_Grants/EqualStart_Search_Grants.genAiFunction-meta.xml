@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<GenAiFunction xmlns="http://soap.sforce.com/2006/04/metadata">
+    <masterLabel>Search Federal Grants</masterLabel>
+    <description>Queries Grants.gov search2 for the given account and upserts matches.</description>
+    <invocationTarget>SearchGrantsAction</invocationTarget>
+    <invocationTargetType>apex</invocationTargetType>
+</GenAiFunction>

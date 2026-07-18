@@ -1,0 +1,22 @@
+:host {
+    display: block;
+}
+
+:host input[type="checkbox"] {
+    width: 1.15rem;
+    height: 1.15rem;
+    accent-color: var(--slds-g-color-brand-base-50, #0176d3);
+}
+
+:host input[type="checkbox"]:focus-visible {
+    outline: 3px solid var(--slds-g-color-brand-base-50, #0176d3);
+    outline-offset: 2px;
+    border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    :host * {
+        animation: none !important;
+        transition: none !important;
+    }
+}

@@ -1,0 +1,77 @@
+<template>
+    <template lwc:if={hasSummary}>
+        <article class="es-card">
+            <!-- ===== Summary header ===== -->
+            <div class="es-head">
+                <div class="es-head__icon">
+                    <lightning-icon icon-name="standard:document" size="small"></lightning-icon>
+                </div>
+                <div class="es-head__body">
+                    <h2 class="es-grant">{summary.grantTitle}</h2>
+                    <p class="es-sub">{summary.businessName} &middot; {summary.agency}</p>
+                    <div class="es-metarow">
+                        <span class="es-appnum">{summary.applicationName}</span>
+                        <span class={summary.statusClass}>{summary.statusLabel}</span>
+                    </div>
+                </div>
+                <button class="es-download" type="button" onclick={downloadSummary}
+                    title="Download summary and checklist">
+                    <lightning-icon icon-name="utility:download" size="x-small"
+                        alternative-text="Download summary"></lightning-icon>
+                </button>
+            </div>
+
+            <!-- ===== Readiness ===== -->
+            <div class="es-readiness">
+                <div class="es-readiness__row">
+                    <span class="es-readiness__label">Readiness</span>
+                    <span class="es-readiness__count">{summary.readinessLabel}</span>
+                </div>
+                <div class="es-bar">
+                    <div class="es-bar__fill" style={summary.progressStyle}></div>
+                </div>
+            </div>
+
+            <!-- ===== Executive summary (collapsible) ===== -->
+            <template lwc:if={hasExecutiveSummary}>
+                <div class="es-exec">
+                    <button class="es-exec__toggle" type="button" onclick={toggleSummary}
+                        aria-expanded={summaryExpanded}>
+                        <span>Executive summary</span>
+                        <span class="es-exec__action">{summaryToggleLabel}</span>
+                    </button>
+                    <div class={summaryBodyClass}>
+                        <p class="es-exec__text">{summary.executiveSummary}</p>
+                        <p class="es-exec__note">
+                            AI-assisted draft &mdash; review before submitting.
+                        </p>
+                    </div>
+                </div>
+            </template>
+
+            <!-- ===== Document checklist (vertical list) ===== -->
+            <template lwc:if={hasChecklist}>
+                <div class="es-checklist">
+                    <h3 class="es-checklist__title">Document checklist</h3>
+                    <ul role="list">
+                        <template for:each={checklist} for:item="c">
+                            <li key={c.key} class={c.rowClass}>
+                                <lightning-icon icon-name={c.iconName} size="x-small"
+                                    variant={c.iconVariant} class="es-item__icon">
+                                </lightning-icon>
+                                <div class="es-item__body">
+                                    <span class="es-item__name">{c.name}</span>
+                                    <span class="es-item__cat">{c.category}</span>
+                                </div>
+                            </li>
+                        </template>
+                    </ul>
+                </div>
+            </template>
+        </article>
+    </template>
+
+    <template lwc:if={noSummary}>
+        <p class="es-empty">No application details to display yet.</p>
+    </template>
+</template>
