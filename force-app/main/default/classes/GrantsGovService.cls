@@ -191,7 +191,7 @@ public with sharing class GrantsGovService {
             f.liveData = false;
             f.eligibilitySummary =
                 'Mock detail: veteran-owned set-aside; small business under 50 employees; ' +
-                'NAICS 238220 in scope; requires SAM.gov active registration.';
+                'NAICS 238220 in scope; requires active SAM registration (System for Award Management).';
             f.awardCeiling = 100000;
             return f;
         }

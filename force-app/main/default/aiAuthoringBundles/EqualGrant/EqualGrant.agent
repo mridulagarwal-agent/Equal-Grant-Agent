@@ -63,6 +63,8 @@ variables:
         description: "True once the application summary card has been rendered, so it is not shown again."
     summary_text: mutable string = ""
         description: "Pre-formatted plain-text application summary returned by get_application_summary; presented verbatim as the reliable fallback."
+    case_number: mutable string = ""
+        description: "Human-readable Case number (e.g. 00001234) returned by the escalation flow, so the user can quote it when calling support."
     intake_biz_name: mutable string = ""
         description: "Q1: the business legal name."
     intake_employees: mutable string = ""
@@ -149,10 +151,12 @@ subagent Business_Profile_Intake:
                   to exclude you." When the user answers, call the record_ownership action.
                   Ask nothing else.
 
-            # Q5 - SAM.gov
+            # Q5 - SAM (System for Award Management). Avoid writing "SAM.gov" verbatim: the
+            # Trust Layer URL masker rewrites ".gov" tokens to "URL_Redacted" in the reply.
             if @variables.profile_complete == False and @variables.intake_ownership != "" and @variables.intake_sam_status == "":
-                | Say only: "Do you have an active SAM.gov registration with a UEI number?"
-                  When the user answers, call the record_sam action. Ask nothing else.
+                | Say only: "Do you have an active SAM registration (System for Award Management)
+                  with a UEI number?" When the user answers, call the record_sam action. Ask
+                  nothing else.
 
             # Q6 - Industry / business type (drives the grant search keyword)
             if @variables.profile_complete == False and @variables.intake_sam_status != "" and @variables.intake_industry == "":
@@ -325,21 +329,26 @@ subagent Application_Preparation:
                      executive summary for your application?" When the user agrees, you MUST
                      call the draft_executive_summary action exactly once.
 
-            #STEP 3: draft succeeded - present the draft text only.
+            #STEP 3: draft succeeded - present the draft text, then the follow-up handoff.
             if @variables.draft_attempted == True and @variables.executive_summary_draft != "":
                 | Present the drafted executive summary below, followed by this exact line:
                   "This is an AI-assisted starting draft - please review and personalize
                   before submitting."
                   {!@variables.executive_summary_draft}
                   Do NOT re-list the checklist or application details - the card already
-                  showed them.
+                  showed them. Then close by telling the user to keep their application number
+                  handy, and that they can call our support line at 1-800-555-0123 and quote it
+                  so a relationship manager can pull up their application, summary, and
+                  checklist and help them further.
 
             #STEP 4: draft was attempted but produced nothing - reassure, do NOT loop.
             if @variables.draft_attempted == True and @variables.executive_summary_draft == "":
                 | Tell the user the application and checklist are saved and ready, but the
                   executive-summary draft could not be generated right now. Reassure them the
-                  application itself is complete, and offer to answer questions about next
-                  steps. Do not ask any profile questions again.
+                  application itself is complete. Tell them to keep their application number
+                  handy and that they can call our support line at 1-800-555-0123 and quote it
+                  so a relationship manager can help them further. Do not ask any profile
+                  questions again.
         actions:
             draft_executive_summary: @actions.draft_executive_summary
                 with "Input:Application" = @variables.application_id
@@ -448,11 +457,22 @@ subagent Escalation:
     description: "Creates a Case and hands off to a human for out-of-scope, adversarial, or requested-human cases."
     reasoning:
         instructions: ->
-            | You MUST call the escalate_to_human action right away. Extract a short reason
-              for the escalation and a one-line summary of the conversation so far to pass
-              into it. Then briefly and empathetically confirm that a human specialist has
-              been notified and will follow up. Do not try to resolve the issue yourself, and
-              do not give legal, tax, immigration, or medical advice.
+            # Not yet escalated - create the Case (captures case_number), then confirm.
+            if @variables.case_number == "":
+                | You MUST call the escalate_to_human action right away. Extract a short reason
+                  for the escalation and a one-line summary of the conversation so far to pass
+                  into it. Do not try to resolve the issue yourself, and do not give legal,
+                  tax, immigration, or medical advice.
+
+            # Case created - read back the Case number and the follow-up guidance.
+            if @variables.case_number != "":
+                | Briefly and empathetically confirm that a human specialist has been notified
+                  and will follow up. Then tell the user, using these EXACT values:
+                  "Your case number is {!@variables.case_number}. Please keep it for your
+                  records - you can quote this number (or your application number if you have
+                  one) when you call our support line so a relationship manager can pull up
+                  your details and help you further."
+                  Do not invent any other reference number.
         actions:
             # escalate_to_human is LLM-invoked here so its slot-filled (...) inputs can be
             # resolved from the conversation. Slot-fill is valid in reasoning.actions but NOT
@@ -462,6 +482,7 @@ subagent Escalation:
                 with inputReason = ...
                 with inputTranscriptSummary = ...
                 with inputApplicationId = @variables.application_id
+                set @variables.case_number = @outputs.outputCaseNumber
             transfer_to_human: @utils.escalate
                 description: "Transfer the live conversation to a human support representative."
 # ==========================================================
@@ -479,6 +500,7 @@ subagent Escalation:
                 inputApplicationId: string
             outputs:
                 outputCaseId: string
+                outputCaseNumber: string
             target: "flow://Escalate_To_Human"
 
 subagent Certification_Guidance:

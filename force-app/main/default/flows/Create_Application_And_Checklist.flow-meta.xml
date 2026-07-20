@@ -243,7 +243,7 @@
         <assignmentItems>
             <assignToReference>varChecklistItem.Item_Name__c</assignToReference>
             <operator>Assign</operator>
-            <value><stringValue>Active SAM.gov registration + UEI</stringValue></value>
+            <value><stringValue>Active SAM registration + UEI (System for Award Management)</stringValue></value>
         </assignmentItems>
         <assignmentItems>
             <assignToReference>varChecklistItem.Category__c</assignToReference>
@@ -253,7 +253,7 @@
         <assignmentItems>
             <assignToReference>varChecklistItem.Guidance__c</assignToReference>
             <operator>Assign</operator>
-            <value><stringValue>Register free at SAM.gov - allow 2-3 weeks.</stringValue></value>
+            <value><stringValue>Register free at the System for Award Management (SAM) - allow 2-3 weeks.</stringValue></value>
         </assignmentItems>
         <assignmentItems>
             <assignToReference>varChecklistItem.Source__c</assignToReference>

@@ -1,0 +1,101 @@
+<template>
+    <lightning-card>
+        <span slot="title" class="es-card-title">Application Overview</span>
+
+        <template lwc:if={isLoading}>
+            <div class="es-load"><lightning-spinner alternative-text="Loading" size="small"></lightning-spinner></div>
+        </template>
+
+        <template lwc:if={hasApp}>
+            <div class="es-body">
+                <!-- Grant opportunity -->
+                <section class="es-block">
+                    <h3 class="es-grant">{grant.title}</h3>
+                    <p class="es-sub">{business.name} &middot; {grant.agency}</p>
+                    <div class="es-metarow">
+                        <span class="es-appnum">{app.applicationName}</span>
+                        <span class={app.statusClass}>{app.statusLabel}</span>
+                    </div>
+
+                    <div class="es-readiness">
+                        <div class="es-readiness__row">
+                            <span class="es-readiness__label">Readiness</span>
+                            <span class="es-readiness__count">{app.readinessLabel}</span>
+                        </div>
+                        <div class="es-bar"><div class="es-bar__fill" style={app.progressStyle}></div></div>
+                    </div>
+
+                    <dl class="es-grid">
+                        <div><dt>Opportunity #</dt><dd>{grant.opportunityNumber}</dd></div>
+                        <div><dt>Category</dt><dd>{grant.fundingCategory}</dd></div>
+                        <div><dt>Closes</dt><dd><lightning-formatted-date-time value={grant.closeDate}></lightning-formatted-date-time></dd></div>
+                        <div><dt>Award ceiling</dt><dd><lightning-formatted-number value={grant.awardCeiling} format-style="currency" currency-code="USD" maximum-fraction-digits="0"></lightning-formatted-number></dd></div>
+                    </dl>
+                    <template lwc:if={grant.matchRationale}>
+                        <p class="es-rationale"><b>Why they match:</b> {grant.matchRationale}</p>
+                    </template>
+                    <template lwc:if={hasCaseNumber}>
+                        <p class="es-case">Linked support case: <b>{app.caseNumber}</b></p>
+                    </template>
+                </section>
+
+                <!-- Business profile -->
+                <section class="es-block">
+                    <h4 class="es-h4">Business profile</h4>
+                    <template lwc:if={hasOwnershipTags}>
+                        <div class="es-tags">
+                            <template for:each={business.ownershipTags} for:item="t">
+                                <span key={t.key} class="es-tag">{t.label}</span>
+                            </template>
+                        </div>
+                    </template>
+                    <dl class="es-grid">
+                        <div><dt>State</dt><dd>{business.operatingState}</dd></div>
+                        <div><dt>Employees</dt><dd>{business.employees}</dd></div>
+                        <div><dt>Revenue band</dt><dd>{business.revenueBand}</dd></div>
+                        <div><dt>NAICS</dt><dd>{business.naicsCode}</dd></div>
+                        <div><dt>Industry</dt><dd>{business.industry}</dd></div>
+                        <div><dt>SAM UEI</dt><dd>{business.samUei}</dd></div>
+                    </dl>
+                </section>
+
+                <!-- Checklist -->
+                <template lwc:if={hasChecklist}>
+                    <section class="es-block">
+                        <h4 class="es-h4">Document checklist</h4>
+                        <template for:each={checklist} for:item="grp">
+                            <div key={grp.key} class="es-cat">
+                                <p class="es-cat__label">{grp.category}</p>
+                                <ul>
+                                    <template for:each={grp.items} for:item="c">
+                                        <li key={c.key} class={c.rowClass}>
+                                            <lightning-icon icon-name={c.iconName} size="x-small" variant={c.iconVariant} class="es-item__icon"></lightning-icon>
+                                            <div class="es-item__body">
+                                                <span class="es-item__name">{c.name}</span>
+                                                <template lwc:if={c.guidance}>
+                                                    <span class="es-item__guidance">{c.guidance}</span>
+                                                </template>
+                                            </div>
+                                        </li>
+                                    </template>
+                                </ul>
+                            </div>
+                        </template>
+                    </section>
+                </template>
+
+                <!-- Executive summary -->
+                <template lwc:if={hasExecutiveSummary}>
+                    <section class="es-block">
+                        <h4 class="es-h4">Executive summary (AI-assisted draft)</h4>
+                        <p class="es-exec">{app.executiveSummary}</p>
+                    </section>
+                </template>
+            </div>
+        </template>
+
+        <template lwc:if={noApp}>
+            <p class="es-empty">No application details to display.</p>
+        </template>
+    </lightning-card>
+</template>
